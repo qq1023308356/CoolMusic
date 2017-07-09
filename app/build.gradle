@@ -1,30 +1,15 @@
 apply plugin: 'com.android.application'
-apply plugin: 'bugly'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion "25.0.3"
 
     defaultConfig {
         applicationId "me.cool.music"
         minSdkVersion 14
-        targetSdkVersion 23
-        versionCode 121
-        versionName "1.2.1"
-    }
-
-    signingConfigs {
-        release {
-            Properties properties = new Properties()
-            properties.load(project.rootProject.file('local.properties').newDataInputStream())
-            storeFile file("wangchenyan.keystore")
-            storePassword properties.get("STORE_PASSWORD")
-            keyAlias properties.get("KEY_ALIAS")
-            keyPassword properties.get("KEY_PASSWORD")
-        }
-        debug {
-            storeFile file("debug.keystore")
-        }
+        targetSdkVersion 25
+        versionCode 100
+        versionName "1.0.0"
     }
 
     buildTypes {
@@ -32,19 +17,8 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
-        }
-        debug {
-            signingConfig signingConfigs.debug
         }
     }
-}
-
-bugly {
-    Properties properties = new Properties()
-    properties.load(project.rootProject.file('local.properties').newDataInputStream())
-    appId = properties.get("BUGLY_APP_ID")
-    appKey = properties.get("BUGLY_APP_KEY")
 }
 
 ext {
@@ -56,8 +30,7 @@ dependencies {
     compile "com.android.support:appcompat-v7:${supportVersion}"
     compile "com.android.support:design:${supportVersion}"
     compile 'com.zhy:okhttputils:2.6.2'
-    compile 'com.google.code.gson:gson:2.7'
+    compile 'com.google.code.gson:gson:2.8.1'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
-    compile 'me.wcy:lrcview:1.4.1'
-    compile 'com.tencent.bugly:crashreport_upgrade:1.2.5'
+    compile 'me.wcy:lrcview:1.4.2'
 }

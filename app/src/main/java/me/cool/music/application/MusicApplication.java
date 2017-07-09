@@ -4,14 +4,11 @@ import android.app.Application;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.tencent.bugly.Bugly;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.log.LoggerInterceptor;
 
 import java.util.concurrent.TimeUnit;
 
-import me.cool.music.BuildConfig;
-import me.cool.music.api.KeyStore;
 import me.cool.music.http.HttpInterceptor;
 import me.cool.music.utils.Preferences;
 import okhttp3.OkHttpClient;
@@ -21,7 +18,7 @@ import okhttp3.OkHttpClient;
  * Created by wcy on 2015/11/27.
  */
 public class MusicApplication extends Application {
-    private static final String TAG = "PonyMusic";
+    private static final String TAG = "CoolMusic";
 
     @Override
     public void onCreate() {
@@ -31,7 +28,6 @@ public class MusicApplication extends Application {
         AppCache.updateNightMode(Preferences.isNightMode());
         initOkHttpUtils();
         initImageLoader();
-        initBugly();
     }
 
     private void initOkHttpUtils() {
@@ -51,11 +47,5 @@ public class MusicApplication extends Application {
                 .diskCacheSize(50 * 1024 * 1024) // 50MB
                 .build();
         ImageLoader.getInstance().init(configuration);
-    }
-
-    private void initBugly() {
-        if (!BuildConfig.DEBUG) {
-            Bugly.init(this, KeyStore.getKey(KeyStore.BUGLY_APP_ID), false);
-        }
     }
 }

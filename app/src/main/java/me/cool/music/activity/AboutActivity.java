@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 
-import com.tencent.bugly.beta.Beta;
-
 import me.cool.music.BuildConfig;
 import me.cool.music.R;
 
@@ -59,7 +57,6 @@ public class AboutActivity extends BaseActivity {
         @Override
         public boolean onPreferenceClick(Preference preference) {
             if (preference == mUpdate) {
-                Beta.checkUpgrade();
                 return true;
             } else if (preference == mShare) {
                 share();

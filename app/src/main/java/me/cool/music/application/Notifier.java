@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,14 +18,14 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.cool.music.R;
 import me.cool.music.activity.SplashActivity;
 import me.cool.music.constants.Extras;
 import me.cool.music.model.Music;
+import me.cool.music.receiver.StatusBarReceiver;
 import me.cool.music.service.PlayService;
 import me.cool.music.utils.CoverLoader;
 import me.cool.music.utils.FileUtils;
-import me.cool.music.R;
-import me.cool.music.receiver.StatusBarReceiver;
 
 /**
  * Created by wcy on 2017/4/18.
@@ -81,7 +82,13 @@ public class Notifier {
         remoteViews.setTextViewText(R.id.tv_title, title);
         remoteViews.setTextViewText(R.id.tv_subtitle, subtitle);
 
-        boolean isLightNotificationTheme = isLightNotificationTheme(playService);
+        //Android N开始Notification的contentView可以为空
+        boolean isLightNotificationTheme = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N || isLightNotificationTheme(playService);
+
+        if (isLightNotificationTheme){
+            remoteViews.setTextColor(R.id.tv_title,Color.BLACK);
+            remoteViews.setTextColor(R.id.tv_subtitle,Color.BLACK);
+        }
 
         Intent playIntent = new Intent(StatusBarReceiver.ACTION_STATUS_BAR);
         playIntent.putExtra(StatusBarReceiver.EXTRA, StatusBarReceiver.EXTRA_PLAY_PAUSE);
