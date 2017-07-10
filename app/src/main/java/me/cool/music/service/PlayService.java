@@ -21,6 +21,7 @@ import me.cool.music.application.AppCache;
 import me.cool.music.application.Notifier;
 import me.cool.music.constants.Actions;
 import me.cool.music.enums.PlayModeEnum;
+import me.cool.music.fragment.PlayFragment;
 import me.cool.music.model.Music;
 import me.cool.music.receiver.NoisyAudioStreamReceiver;
 import me.cool.music.utils.MusicUtils;
@@ -124,6 +125,11 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         Music music = mMusicList.get(mPlayingPosition);
         Preferences.saveCurrentSongId(music.getId());
         play(music);
+        if (PlayFragment.historyAdapter!=null){
+            PlayFragment.historyAdapter.setMusic(music);
+            PlayFragment.historyAdapter.setpos();
+            PlayFragment.historyAdapter.notifyDataSetChanged();
+        }
     }
 
     public void play(Music music) {
@@ -205,7 +211,6 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         if (mMusicList.isEmpty()) {
             return;
         }
-
         PlayModeEnum mode = PlayModeEnum.valueOf(Preferences.getPlayMode());
         switch (mode) {
             case SHUFFLE:

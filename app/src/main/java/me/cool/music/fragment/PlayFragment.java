@@ -93,6 +93,8 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
     private AudioManager mAudioManager;
     private List<View> mViewPagerContent;
     private int mLastProgress;
+    public static RecyclerView recyclerView;
+    public static HistoryAdapter historyAdapter;
 
     @Nullable
     @Override
@@ -226,9 +228,9 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
             @Override
             public void bindView(View v) {
                 TextView textView= (TextView) v.findViewById(R.id.clean);
-                final RecyclerView recyclerView= (RecyclerView) v.findViewById(R.id.recyclerView);
+                recyclerView= (RecyclerView) v.findViewById(R.id.recyclerView);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                final HistoryAdapter historyAdapter=new HistoryAdapter(R.layout.view_history_item,musicList,getPlayService().getPlayingMusic());
+                historyAdapter=new HistoryAdapter(R.layout.view_history_item,musicList,getPlayService().getPlayingMusic());
                 recyclerView.setAdapter(historyAdapter);
                 recyclerView.scrollToPosition(musicList.indexOf(getPlayService().getPlayingMusic()));
                 historyAdapter.openLoadAnimation(new BaseAnimation() {
