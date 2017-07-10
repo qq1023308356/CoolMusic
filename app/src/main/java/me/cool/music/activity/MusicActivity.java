@@ -25,6 +25,7 @@ import me.cool.music.model.Music;
 import me.cool.music.receiver.RemoteControlReceiver;
 import me.cool.music.service.OnPlayerEventListener;
 import me.cool.music.service.PlayService;
+import me.cool.music.utils.HistoryDB;
 import me.cool.music.utils.SystemUtils;
 import me.cool.music.utils.ToastUtils;
 import me.cool.music.utils.permission.PermissionResult;
@@ -263,7 +264,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         if (music == null) {
             return;
         }
-
+        HistoryDB.getInstens(MusicActivity.this).saveHistoryMusic(music);
         Bitmap cover = CoverLoader.getInstance().loadThumbnail(music);
         ivPlayBarCover.setImageBitmap(cover);
         tvPlayBarTitle.setText(music.getTitle());

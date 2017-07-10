@@ -33,4 +33,8 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.1'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compile 'me.wcy:lrcview:1.4.2'
+
+
+    compile 'me.shaohui:bottomdialog:1.1.9'
+    compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.22'
 }

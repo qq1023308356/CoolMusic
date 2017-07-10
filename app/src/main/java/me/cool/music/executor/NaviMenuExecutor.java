@@ -8,14 +8,14 @@ import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
 
+import me.cool.music.R;
 import me.cool.music.activity.AboutActivity;
 import me.cool.music.activity.MusicActivity;
 import me.cool.music.activity.SettingActivity;
 import me.cool.music.application.AppCache;
 import me.cool.music.service.PlayService;
-import me.cool.music.utils.ToastUtils;
-import me.cool.music.R;
 import me.cool.music.utils.Preferences;
+import me.cool.music.utils.ToastUtils;
 
 /**
  * 导航菜单执行器
@@ -23,7 +23,7 @@ import me.cool.music.utils.Preferences;
  */
 public class NaviMenuExecutor {
 
-    public static boolean onNavigationItemSelected(MenuItem item, Context context) {
+    public static boolean onNavigationItemSelected(MenuItem item, final Context context) {
         switch (item.getItemId()) {
             case R.id.action_setting:
                 startActivity(context, SettingActivity.class);

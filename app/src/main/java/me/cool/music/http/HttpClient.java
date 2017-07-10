@@ -79,7 +79,7 @@ public class HttpClient {
                 });
     }
 
-    public static void getSongListInfo(String type, int size, int offset, final HttpCallback<OnlineMusicList> callback) {
+    public static void getSongListInfo(final String type, int size, int offset, final HttpCallback<OnlineMusicList> callback) {
         OkHttpUtils.get().url(BASE_URL)
                 .addParams(PARAM_METHOD, METHOD_GET_MUSIC_LIST)
                 .addParams(PARAM_TYPE, type)
@@ -89,6 +89,7 @@ public class HttpClient {
                 .execute(new JsonCallback<OnlineMusicList>(OnlineMusicList.class) {
                     @Override
                     public void onResponse(OnlineMusicList response, int id) {
+                        //Log.e("66",type);
                         callback.onSuccess(response);
                     }
 

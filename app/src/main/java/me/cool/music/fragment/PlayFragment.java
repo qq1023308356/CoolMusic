@@ -1,5 +1,7 @@
 package me.cool.music.fragment;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +12,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,26 +23,32 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.animation.BaseAnimation;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.cool.music.R;
+import me.cool.music.adapter.HistoryAdapter;
 import me.cool.music.adapter.PlayPagerAdapter;
 import me.cool.music.constants.Actions;
-import me.cool.music.executor.SearchLrc;
-import me.cool.music.utils.FileUtils;
-import me.cool.music.utils.SystemUtils;
-import me.wcy.lrcview.LrcView;
-import me.cool.music.R;
 import me.cool.music.enums.PlayModeEnum;
+import me.cool.music.executor.SearchLrc;
 import me.cool.music.model.Music;
 import me.cool.music.utils.CoverLoader;
+import me.cool.music.utils.FileUtils;
+import me.cool.music.utils.HistoryDB;
 import me.cool.music.utils.Preferences;
 import me.cool.music.utils.ScreenUtils;
+import me.cool.music.utils.SystemUtils;
 import me.cool.music.utils.ToastUtils;
 import me.cool.music.utils.binding.Bind;
 import me.cool.music.widget.AlbumCoverView;
 import me.cool.music.widget.IndicatorLayout;
+import me.shaohui.bottomdialog.BottomDialog;
+import me.wcy.lrcview.LrcView;
 
 /**
  * 正在播放界面
@@ -74,6 +84,8 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
     private ImageView ivNext;
     @Bind(R.id.iv_prev)
     private ImageView ivPrev;
+    @Bind(R.id.iv_history)
+    private ImageView ivHistory;
     private AlbumCoverView mAlbumCoverView;
     private LrcView mLrcViewSingle;
     private LrcView mLrcViewFull;
@@ -111,6 +123,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
         ivPlay.setOnClickListener(this);
         ivPrev.setOnClickListener(this);
         ivNext.setOnClickListener(this);
+        ivHistory.setOnClickListener(this);
         sbProgress.setOnSeekBarChangeListener(this);
         sbVolume.setOnSeekBarChangeListener(this);
         vpPlay.setOnPageChangeListener(this);
@@ -201,7 +214,50 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
             case R.id.iv_prev:
                 prev();
                 break;
+            case R.id.iv_history:
+                history();
+                break;
         }
+    }
+
+    private void history() {
+        final List<Music> musicList= HistoryDB.getInstens(getActivity()).getHistoryMusic();
+        BottomDialog.create(getFragmentManager()).setLayoutRes(R.layout.view_history).setDimAmount(0.6f).setViewListener(new BottomDialog.ViewListener() {
+            @Override
+            public void bindView(View v) {
+                TextView textView= (TextView) v.findViewById(R.id.clean);
+                final RecyclerView recyclerView= (RecyclerView) v.findViewById(R.id.recyclerView);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                final HistoryAdapter historyAdapter=new HistoryAdapter(R.layout.view_history_item,musicList,getPlayService().getPlayingMusic());
+                recyclerView.setAdapter(historyAdapter);
+                recyclerView.scrollToPosition(musicList.indexOf(getPlayService().getPlayingMusic()));
+                historyAdapter.openLoadAnimation(new BaseAnimation() {
+                    @Override
+                    public Animator[] getAnimators(View view) {
+                        return new Animator[]{
+                                ObjectAnimator.ofFloat(view, "scaleY", 1, 1.1f, 1),
+                                ObjectAnimator.ofFloat(view, "scaleX", 1, 1.1f, 1)
+                        };
+                    }
+                });
+                historyAdapter.isFirstOnly(false);
+                historyAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                        getPlayService().play(musicList.get(position));
+                        historyAdapter.setMusic(musicList.get(position));
+                        historyAdapter.setpos();
+                        historyAdapter.notifyItemChanged(position);
+                    }
+                });
+                textView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ToastUtils.show("就是不清空");
+                    }
+                });
+            }
+        }).show();
     }
 
     @Override

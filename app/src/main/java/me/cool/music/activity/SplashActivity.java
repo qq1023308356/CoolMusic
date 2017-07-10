@@ -44,7 +44,6 @@ public class SplashActivity extends BaseActivity {
 
         int year = Calendar.getInstance().get(Calendar.YEAR);
         tvCopyright.setText(getString(R.string.copyright, year));
-
         checkService();
     }
 
@@ -59,7 +58,7 @@ public class SplashActivity extends BaseActivity {
                 public void run() {
                     bindService();
                 }
-            }, 1000);
+            }, 200);
         } else {
             startMusicActivity();
             finish();
